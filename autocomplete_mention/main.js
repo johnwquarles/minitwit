@@ -14,7 +14,7 @@ $(function() {
     resAtt: "username",
     // attribute name on our query object (backend needs to know this to get to the search term).
     reqAtt: "search"
-  }
+  };
 
   //
   // ------------------- autoComplete handler starts from here --------------
@@ -38,11 +38,11 @@ $(function() {
   // handle data response here (need .label and .value for each autocomplete object)
   function formatResponse(data) {
     return data.map(function(obj) {
-      ret_obj = {};
+      var ret_obj = {};
       ret_obj.label = "@" + obj[config.resAtt];
       ret_obj.value = obj[config.resAtt];
       return ret_obj;
-    })
+    });
   }
   function split( val ) {
     return val.split( /\s*@/ );
@@ -64,7 +64,7 @@ $(function() {
     });
   }
   function insertValue( event, ui ) {
-    var terms = this.value.split( /\s+@/ );;
+    var terms = this.value.split( /\s+@/ );
     // special case; don't add a space before @ if the mention is the first thing user enters.
     if (terms.length === 1) {this.value = "@" + ui.item.value + " "; return false;}
     terms.pop();
