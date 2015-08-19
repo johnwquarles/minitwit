@@ -1,3 +1,4 @@
+/*jshint -W097 */
 /*global $:false */
 
 // needs jQuery, jQuery-ui, jQuery-ui smoothness CSS theme
