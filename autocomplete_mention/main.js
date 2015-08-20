@@ -3,21 +3,21 @@
 // needs jQuery, jQuery-ui, jQuery-ui smoothness CSS theme
 // (or we could make our own styling for the autocomplete menu and would just need the first two).
 
-"use strict";
+'use strict';
 
 $(function() {
 
   var config = {
     // text input element to which we're attaching this autoComplete handler.
-    attachTo: ".mention",
+    attachTo: '.mention',
     // route to which we make our JSON request.
-    route: "/mock",
+    route: '/mock',
     // characters required after @ for autocomplete to fire.
     minLength: 3,
     // attribute within each individual object in the backend response that gets us the username.
-    resAtt: "username",
+    resAtt: 'username',
     // attribute name on our query object (backend needs to know this to get to the search term).
-    reqAtt: "search"
+    reqAtt: 'search'
   };
 
   //
@@ -25,7 +25,7 @@ $(function() {
   //
 
   $( config.attachTo )
-    .bind( "keydown", onKeyDown)
+    .bind( 'keydown', onKeyDown)
     .autocomplete({
       source: getData,
       search: autoCompleteWhen,
@@ -43,7 +43,7 @@ $(function() {
   function formatResponse(data) {
     return data.map(function(obj) {
       var ret_obj = {};
-      ret_obj.label = "@" + obj[config.resAtt];
+      ret_obj.label = '@' + obj[config.resAtt];
       ret_obj.value = obj[config.resAtt];
       return ret_obj;
     });
@@ -60,7 +60,7 @@ $(function() {
     query[config.reqAtt] = term;
     $.getJSON( config.route, query, function(data) {
       var formattedData = formatResponse(data);
-      if (term.indexOf(" ") !== -1) {
+      if (term.indexOf(' ') !== -1) {
         response();
         return;
       }
@@ -70,10 +70,10 @@ $(function() {
   function insertValue( event, ui ) {
     var terms = this.value.split( /\s+@/ );
     // special case; don't add a space before @ if the mention is the first thing user enters.
-    if (terms.length === 1) {this.value = "@" + ui.item.value + " "; return false;}
+    if (terms.length === 1) {this.value = '@' + ui.item.value + ' '; return false;}
     terms.pop();
     terms.push( ui.item.value );
-    this.value = terms.join( " @" ) + " ";
+    this.value = terms.join( ' @' ) + ' ';
     return false;
   }
   function autoCompleteWhen() {
@@ -82,7 +82,7 @@ $(function() {
   }
   function onKeyDown(event) {
     if ( event.keyCode === $.ui.keyCode.TAB &&
-        $( this ).autocomplete( "instance" ).menu.active ) {
+        $( this ).autocomplete( 'instance' ).menu.active ) {
       event.preventDefault();
     }
   }
