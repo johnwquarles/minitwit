@@ -1,4 +1,4 @@
-/*global $:false */
+/*eslint-env jquery */
 
 // needs jQuery, jQuery-ui, jQuery-ui smoothness CSS theme
 // (or we could make our own styling for the autocomplete menu and would just need the first two).
