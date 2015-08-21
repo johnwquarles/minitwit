@@ -1,12 +1,9 @@
 ---
 env:
   es6: true
-  mocha: true
-  node: true
+  jquery: true
 
 extends: eslint:recommended
-
-root: true
 
 rules:
   eol-last: 2
@@ -16,5 +13,5 @@ rules:
   quotes: [2, single, avoid-escape]
   semi: [2, always]
   space-before-function-paren: [2, {"anonymous": "always", "named": "never"}]
-  strict: [2, global]
+  strict: [2, "function"]
 ...
