@@ -1,0 +1,11 @@
+extends ../templates/layout
+
+block content
+  form(action='/post', method='POST')
+    input(name='text')
+    input(type='submit')
+
+  ul
+    each post in posts
+      li
+        a(href='/post/' + post._id)= post.text

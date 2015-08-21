@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
-    "start": "node index.js",
-    "test": "mocha app --recursive --compilers js:babel/register"
+    "start": "node index.js --compilers js:babel/register",
+    "test": "NODE_ENV=test mocha app --recursive --compilers js:babel/register"
   },
   "repository": {
     "type": "git",
@@ -20,13 +20,18 @@
   "homepage": "https://github.com/NSS-Cohort-9/minitwit#readme",
   "dependencies": {
     "babel": "^5.8.21",
+    "body-parser": "^1.13.3",
     "errorhandler": "^1.4.2",
     "express": "^4.13.3",
     "jade": "^1.11.0",
+    "lodash": "^3.10.1",
+    "md5": "^2.0.0",
     "mongodb": "^2.0.41",
-    "morgan": "^1.6.1"
+    "morgan": "^1.6.1",
+    "node-sass-middleware": "^0.9.0"
   },
   "devDependencies": {
+    "bower": "^1.4.1",
     "chai": "^3.2.0",
     "eslint": "^1.1.0",
     "mocha": "^2.2.5",
