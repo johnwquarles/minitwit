@@ -1,8 +1,9 @@
 /*eslint-env jquery */
+/*global horsey*/
 
 // Requires jQuery, Horsey, and configuration of the below config object.
 
-(function(){
+(function (){
   var config = {
     // HTML element to attach this to
     element: '.mention',
@@ -15,14 +16,14 @@
     resAtt: 'username'
   };
 
-  $(config.element).on('keyup', function() {
+  $(config.element).on('keyup', function (event) {
     var spaceCheck = $(event.target).val().split('@')[0];
-    if (spaceCheck[spaceCheck.length - 1] === ' ' || spaceCheck === "") {
+    if (spaceCheck[spaceCheck.length - 1] === ' ' || spaceCheck === '') {
 
       var str = $(event.target).val().split('@')[1];
       if (str && str.length >= 2 && event.keyIdentifier !== 'U+0008') {
         if (!config.horse) {
-          getAutoData(str, function(formattedData) {
+          getAutoData(str, function (formattedData) {
             setHorsey(formattedData);
           });
         } else {
@@ -36,18 +37,18 @@
     }
   });
 
-  $(config.element).on('keydown', function() {
+  $(config.element).on('keydown', function (event) {
     var str = $(event.target).val().split('@')[1];
     if (event.keyIdentifier === 'U+0008' && (str && str.length <= 3)) {
       config.horse && config.horse.hide();
     }
-  })
+  });
 
   function getAutoData(str, cb) {
-    $.getJSON(config.route, makeQuery(str), function(data) {
+    $.getJSON(config.route, makeQuery(str), function (data) {
       var formattedData = formatResponse(data);
       cb(formattedData);
-    })
+    });
   }
 
   function makeQuery(str) {
@@ -57,13 +58,13 @@
   }
 
   function formatResponse(data) {
-    return data.map(function(obj) {
+    return data.map(function (obj) {
       return '@' + obj[config.resAtt];
-    })
+    });
   }
 
   function setHorsey(formattedData) {
-    config.horse = horsey(document.querySelector(config.element), {
+    config.horse = horsey($(config.element), {
       suggestions: formattedData,
       anchor: '@'
     });
