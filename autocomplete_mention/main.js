@@ -1,28 +1,29 @@
-/*eslint-env jquery */
-/*global horsey*/
+/* global horsey */
 
 // Requires jQuery, Horsey, and configuration of the below config object.
 
-'use strict';
+(function () {
 
-(function (){
+  'use strict';
+
   var config = {
     // HTML element to attach this to
-    element: '.mention',
+    element: $('input.entry'),
     // backend route from which we get user objects (to get usernames for the suggestions)
-    route: '/mock',
+    route: '/autocomplete/mention',
     // attribute of query object sent to backend with request
-    reqAtt: 'search',
+    reqAtt: 'pattern',
     // attribute we expect each object to have in the response
     // (expecting a JSON stringified array of objects)
     resAtt: 'username'
   };
 
-  $(config.element).on('keyup', function (event) {
-    var spaceCheck = $(event.target).val().split('@')[0];
+  config.element.on('keyup', function (event) {
+    var $eventTarget = $(event.target);
+    var spaceCheck = $eventTarget.val().split('@')[0];
     if (spaceCheck[spaceCheck.length - 1] === ' ' || spaceCheck === '') {
 
-      var str = $(event.target).val().split('@')[1];
+      var str = $eventTarget.val().split('@')[1];
       if (str && str.length >= 2 && event.keyIdentifier !== 'U+0008') {
         if (!config.horse) {
           getAutoData(str, function (formattedData) {
@@ -39,8 +40,9 @@
     }
   });
 
-  $(config.element).on('keydown', function (event) {
-    var str = $(event.target).val().split('@')[1];
+  config.element.on('keydown', function (event) {
+    var $eventTarget = $(event.target);
+    var str = $eventTarget.val().split('@')[1];
     if (event.keyIdentifier === 'U+0008' && (str && str.length <= 3)) {
       config.horse && config.horse.hide();
     }
