@@ -17,23 +17,19 @@
 
   $(config.element).on('keyup', function() {
     var spaceCheck = $(event.target).val().split('@')[0];
-    console.log(spaceCheck);
     if (spaceCheck[spaceCheck.length - 1] === ' ' || spaceCheck === "") {
 
       var str = $(event.target).val().split('@')[1];
       if (str && str.length >= 2 && event.keyIdentifier !== 'U+0008') {
         if (!config.horse) {
-          console.log('firing create, str: ' + str);
           getAutoData(str, function(formattedData) {
             setHorsey(formattedData);
           });
         } else {
-          console.log('firing unhide, str: ' + str);
           config.horse.show();
         }
       }
       if (event.keyIdentifier === 'U+0008' && ((str && str.length <= 1) || str === undefined)) {
-        console.log('firing delete, str: ' + str);
         config.horse && config.horse.destroy();
         delete config.horse;
       }
@@ -43,7 +39,6 @@
   $(config.element).on('keydown', function() {
     var str = $(event.target).val().split('@')[1];
     if (event.keyIdentifier === 'U+0008' && (str && str.length <= 3)) {
-      console.log('firing hide, str: ' + str);
       config.horse && config.horse.hide();
     }
   })
