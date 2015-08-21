@@ -3,6 +3,8 @@
 
 // Requires jQuery, Horsey, and configuration of the below config object.
 
+'use strict';
+
 (function (){
   var config = {
     // HTML element to attach this to
