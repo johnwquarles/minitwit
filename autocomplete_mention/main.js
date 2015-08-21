@@ -1,89 +1,76 @@
 /*eslint-env jquery */
 
-// needs jQuery, jQuery-ui, jQuery-ui smoothness CSS theme
-// (or we could make our own styling for the autocomplete menu and would just need the first two).
+// Requires jQuery, Horsey, and configuration of the below config object.
 
-'use strict';
-
-$(function() {
-
+(function(){
   var config = {
-    // text input element to which we're attaching this autoComplete handler.
-    attachTo: '.mention',
-    // route to which we make our JSON request.
+    // HTML element to attach this to
+    element: '.mention',
+    // backend route from which we get user objects (to get usernames for the suggestions)
     route: '/mock',
-    // characters required after @ for autocomplete to fire.
-    minLength: 3,
-    // attribute within each individual object in the backend response that gets us the username.
-    resAtt: 'username',
-    // attribute name on our query object (backend needs to know this to get to the search term).
-    reqAtt: 'search'
+    // attribute of query object sent to backend with request
+    reqAtt: 'search',
+    // attribute we expect each object to have in the response
+    // (expecting a JSON stringified array of objects)
+    resAtt: 'username'
   };
 
-  //
-  // ------------------- autoComplete handler starts from here --------------
-  //
+  $(config.element).on('keyup', function() {
+    var spaceCheck = $(event.target).val().split('@')[0];
+    console.log(spaceCheck);
+    if (spaceCheck[spaceCheck.length - 1] === ' ' || spaceCheck === "") {
 
-  $( config.attachTo )
-    .bind( 'keydown', onKeyDown)
-    .autocomplete({
-      source: getData,
-      search: autoCompleteWhen,
-      focus: function() {
-        return false;
-      },
-      select: insertValue
-    });
+      var str = $(event.target).val().split('@')[1];
+      if (str && str.length >= 2 && event.keyIdentifier !== 'U+0008') {
+        if (!config.horse) {
+          console.log('firing create, str: ' + str);
+          getAutoData(str, function(formattedData) {
+            setHorsey(formattedData);
+          });
+        } else {
+          console.log('firing unhide, str: ' + str);
+          config.horse.show();
+        }
+      }
+      if (event.keyIdentifier === 'U+0008' && ((str && str.length <= 1) || str === undefined)) {
+        console.log('firing delete, str: ' + str);
+        config.horse && config.horse.destroy();
+        delete config.horse;
+      }
+    }
+  });
 
-  //
-  // ----------------------- helper functions ---------------------------
-  //
+  $(config.element).on('keydown', function() {
+    var str = $(event.target).val().split('@')[1];
+    if (event.keyIdentifier === 'U+0008' && (str && str.length <= 3)) {
+      console.log('firing hide, str: ' + str);
+      config.horse && config.horse.hide();
+    }
+  })
 
-  // handle data response here (need .label and .value for each autocomplete object)
+  function getAutoData(str, cb) {
+    $.getJSON(config.route, makeQuery(str), function(data) {
+      var formattedData = formatResponse(data);
+      cb(formattedData);
+    })
+  }
+
+  function makeQuery(str) {
+    var obj = {};
+    obj[config.reqAtt] = str;
+    return obj;
+  }
+
   function formatResponse(data) {
     return data.map(function(obj) {
-      var ret_obj = {};
-      ret_obj.label = '@' + obj[config.resAtt];
-      ret_obj.value = obj[config.resAtt];
-      return ret_obj;
+      return '@' + obj[config.resAtt];
+    })
+  }
+
+  function setHorsey(formattedData) {
+    config.horse = horsey(document.querySelector(config.element), {
+      suggestions: formattedData,
+      anchor: '@'
     });
   }
-  function split( val ) {
-    return val.split( /\s*@/ );
-  }
-  function extractLast( term ) {
-    return split( term ).pop();
-  }
-  function getData(request, response) {
-    var term = extractLast( request.term );
-    var query= {};
-    query[config.reqAtt] = term;
-    $.getJSON( config.route, query, function(data) {
-      var formattedData = formatResponse(data);
-      if (term.indexOf(' ') !== -1) {
-        response();
-        return;
-      }
-      response(formattedData);
-    });
-  }
-  function insertValue( event, ui ) {
-    var terms = this.value.split( /\s+@/ );
-    // special case; don't add a space before @ if the mention is the first thing user enters.
-    if (terms.length === 1) {this.value = '@' + ui.item.value + ' '; return false;}
-    terms.pop();
-    terms.push( ui.item.value );
-    this.value = terms.join( ' @' ) + ' ';
-    return false;
-  }
-  function autoCompleteWhen() {
-    var term = extractLast( this.value );
-    if (split(this.value).length === 1 || term.length < config.minLength) return false;
-  }
-  function onKeyDown(event) {
-    if ( event.keyCode === $.ui.keyCode.TAB &&
-        $( this ).autocomplete( 'instance' ).menu.active ) {
-      event.preventDefault();
-    }
-  }
-});
+})();
