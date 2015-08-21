@@ -17,14 +17,14 @@
     // (expecting a JSON stringified array of objects)
     resAtt: 'username'
   };
-
+  var DELKEY = 'U+0008';
   config.element.on('keyup', function (event) {
     var $eventTarget = $(event.target);
     var spaceCheck = $eventTarget.val().split('@')[0];
     if (spaceCheck[spaceCheck.length - 1] === ' ' || spaceCheck === '') {
 
       var str = $eventTarget.val().split('@')[1];
-      if (str && str.length >= 2 && event.keyIdentifier !== 'U+0008') {
+      if (str && str.length >= 2 && event.keyIdentifier !== DELKEY) {
         if (!config.horse) {
           getAutoData(str, function (formattedData) {
             setHorsey(formattedData);
@@ -33,7 +33,7 @@
           config.horse.show();
         }
       }
-      if (event.keyIdentifier === 'U+0008' && ((str && str.length <= 1) || str === undefined)) {
+      if (event.keyIdentifier === DELKEY && ((str && str.length <= 1) || str === undefined)) {
         config.horse && config.horse.destroy();
         delete config.horse;
       }
@@ -43,7 +43,7 @@
   config.element.on('keydown', function (event) {
     var $eventTarget = $(event.target);
     var str = $eventTarget.val().split('@')[1];
-    if (event.keyIdentifier === 'U+0008' && (str && str.length <= 3)) {
+    if (event.keyIdentifier === DELKEY && (str && str.length <= 3)) {
       config.horse && config.horse.hide();
     }
   });
