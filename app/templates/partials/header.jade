@@ -1,2 +1,6 @@
 header
   p Header goes here
+  if user
+    a(href='/logout') Logout as @#{user._id}?
+  else
+    a(href='/auth/twitter') Login with Twitter

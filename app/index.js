@@ -4,8 +4,11 @@
 var bodyParser = require('body-parser');
 var express = require('express');
 var morgan = require('morgan');
+var passport = require('passport');
 var sass = require('node-sass-middleware');
+var session = require('express-session');
 
+var config = require('../config/secrets');
 var routes = require('./routes');
 var database = require('../lib/mongo/');
 
@@ -33,6 +36,15 @@ app.use(sass({
   sourceMap: app.get('env') === 'production' ? 'false' : true,
   src: 'www/styles'
 }));
+app.use(session({
+  resave: false,
+  saveUninitialized: true,
+  secret: config.sessionSecret
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+require('./user/auth');
 
 app.use('/', routes);
 
@@ -56,4 +68,5 @@ function startNodeListener() {
 
     console.log(`Server listening on port ${port} in ${mode} mode...`);
   });
+
 }

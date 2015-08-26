@@ -23,6 +23,13 @@ Post.create = function (post, cb) {
   Post.collection.insertOne(post, cb);
 };
 
+Post.setHidden = function (id, cb) {
+  Post.collection.findOneAndUpdate({_id: ObjectID(id)},
+    {$set: {hidden : true}},
+    {returnOriginal : false},
+  cb);
+};
+
 Post.dropCollection = function (cb) {
   Post.collection.drop(cb);
 };
@@ -34,7 +41,7 @@ Post.findById = function (id, cb) {
 };
 
 Post.findAll = function (cb) {
-  Post.collection.find().toArray(function (err, posts) {
+  Post.collection.find({hidden: {$ne: true}}).toArray(function (err, posts) {
     var prototypedPosts = posts.map(function (post) {
       return setPrototype(post);
     });

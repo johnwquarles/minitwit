@@ -9,13 +9,26 @@ extends: eslint:recommended
 root: true
 
 rules:
+  arrow-parens: [2, as-needed]
+  arrow-spacing: [2, {before: true, after: true }]
+  brace-style: [2, 1tbs, {allowSingleLine: true}]
   camelcase: 2
+  comma-dangle: [2, never]
+  comma-spacing: [2, {before: false, after: true}]
+  comma-style: [2, last]
   eol-last: 2
+  handle-callback-err: [2, ^(err|error)$]
   indent: [2, 2]
-  no-multiple-empty-lines: 2
+  newline-after-var: [2, always]
+  no-multiple-empty-lines: [2, {max: 1}]
   no-trailing-spaces: 2
+  one-var: [2, {uninitialized: always, initialized: never}]
   quotes: [2, single, avoid-escape]
   semi: [2, always]
-  space-before-function-paren: [2, {"anonymous": "always", "named": "never"}]
+  space-after-keywords: 2
+  space-before-blocks: 2
+  space-before-function-paren: [2, {anonymous: always, named: never}]
+  space-in-parens: [2, never]
   strict: [2, global]
+  yoda: [2, never]
 ...
