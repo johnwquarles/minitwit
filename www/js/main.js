@@ -4,6 +4,7 @@
 
 (function () {
 
+  'use strict';
 
   var config = {
     // HTML element to attach this to
@@ -48,7 +49,7 @@
   });
 
   function getAutoData(str, cb) {
-    $.getJSON(config.route, makeQuery(str), function (data) {
+    $.get(config.route, makeQuery(str), function (data) {
       var formattedData = formatResponse(data);
       cb(formattedData);
     });

@@ -25,6 +25,6 @@ module.exports.search = (req, res) => {
 
   User.findByPattern(pattern, (err, matches) => {
     if (err) throw err;
-    res.send(JSON.stringify(matches));
+    res.send(matches);
   });
 };
