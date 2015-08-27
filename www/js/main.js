@@ -4,21 +4,20 @@
 
 (function () {
 
-  'use strict';
 
   var config = {
     // HTML element to attach this to
-    element: $('input.entry'),
+    element: 'input.entry',
     // backend route from which we get user objects (to get usernames for the suggestions)
-    route: '/autocomplete/mention',
+    route: '/user/search',
     // attribute of query object sent to backend with request
     reqAtt: 'pattern',
     // attribute we expect each object to have in the response
-    // (expecting a JSON stringified array of objects)
-    resAtt: 'username'
+    // (expecting a JSON array of objects)
+    resAtt: '_id'
   };
   var DELKEY = 'U+0008';
-  config.element.on('keyup', function (event) {
+  $(config.element).on('keyup', function () {
     var $eventTarget = $(event.target);
     var spaceCheck = $eventTarget.val().split('@')[0];
     if (spaceCheck[spaceCheck.length - 1] === ' ' || spaceCheck === '') {
@@ -40,7 +39,7 @@
     }
   });
 
-  config.element.on('keydown', function (event) {
+  $(config.element).on('keydown', function () {
     var $eventTarget = $(event.target);
     var str = $eventTarget.val().split('@')[1];
     if (event.keyIdentifier === DELKEY && (str && str.length <= 3)) {
@@ -68,7 +67,7 @@
   }
 
   function setHorsey(formattedData) {
-    config.horse = horsey($(config.element), {
+    config.horse = horsey(document.querySelector(config.element), {
       suggestions: formattedData,
       anchor: '@'
     });
