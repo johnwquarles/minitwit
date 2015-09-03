@@ -1,55 +1,82 @@
+angular
+  .module('atmebro', [])
+  .controller('PostsCtrl', function ($http) {
+    var post = this;
+
+    $http
+      .get('/')
+      .success(function (res) {
+        post.data = res.posts;
+      })
+
+  });
+
 /* global horsey */
 
-// Requires jQuery, Horsey, and configuration of the below config object.
+// use .key or use a library? .which || keycode
 
 (function () {
 
   'use strict';
 
   var config = {
-    // HTML element to attach this to
     element: 'input.entry',
-    // backend route from which we get user objects (to get usernames for the suggestions)
     route: '/user/search',
-    // attribute of query object sent to backend with request
     reqAtt: 'pattern',
-    // attribute we expect each object to have in the response
-    // (expecting a JSON array of objects)
     resAtt: '_id'
   };
-  var DELKEY = 'U+0008';
-  $(config.element).on('keyup', function () {
-    var $eventTarget = $(event.target);
-    var spaceCheck = $eventTarget.val().split('@')[0];
-    if (spaceCheck[spaceCheck.length - 1] === ' ' || spaceCheck === '') {
+  var DEL_KEY = 'U+0008',
+      $element = $(config.element);
 
-      var str = $eventTarget.val().split('@')[1];
-      if (str && str.length >= 2 && event.keyIdentifier !== DELKEY) {
-        if (!config.horse) {
-          getAutoData(str, function (formattedData) {
+  $element.on('keyup', function () {
+    var $eventTarget = $(event.target);
+    var partBeforeAtMark = $eventTarget.val().split('@')[0];
+    if (partBeforeAtMark[partBeforeAtMark.length - 1] === ' ' || partBeforeAtMark === '') {
+
+      var partAfterAtMark = $eventTarget.val().split('@')[1];
+      if (partAfterAtMark && partAfterAtMark.length >= 2 && event.keyIdentifier !== DEL_KEY) {
+        if (config.horse) {
+          config.horse.show();
+        } else {
+          getAutoData(partAfterAtMark, function (formattedData) {
             setHorsey(formattedData);
           });
-        } else {
-          config.horse.show();
         }
       }
-      if (event.keyIdentifier === DELKEY && ((str && str.length <= 1) || str === undefined)) {
+      if (event.keyIdentifier === DEL_KEY && ((partAfterAtMark && partAfterAtMark.length <= 1) || partAfterAtMark === undefined)) {
         config.horse && config.horse.destroy();
         delete config.horse;
       }
     }
   });
 
-  $(config.element).on('keydown', function () {
+  // move to a file to be imported here (utility functions);
+
+  function weShouldTurnHorseyOn() {
+    return partAfterAtMark && partAfterAtMark.length >= 2 && event.keyIdentifier !== DEL_KEY ? true: false;
+  }
+
+  function horseyOn() {
+    if (config.horse) {
+      config.horse.show();
+    } else {
+      getAutoData(partAfterAtMark, function (formattedData) {
+        setHorsey(formattedData);
+      });
+    }
+  }
+
+  $element.on('keydown', function () {
     var $eventTarget = $(event.target);
-    var str = $eventTarget.val().split('@')[1];
-    if (event.keyIdentifier === DELKEY && (str && str.length <= 3)) {
+    var partAfterAtMark = $eventTarget.val().split('@')[1];
+    if (event.keyIdentifier === DEL_KEY && (partAfterAtMark && partAfterAtMark.length <= 3)) {
       config.horse && config.horse.hide();
     }
   });
 
   function getAutoData(str, cb) {
-    $.get(config.route, makeQuery(str), function (data) {
+    var query = makeQuery(str);
+    $.get(config.route, query, function (data) {
       var formattedData = formatResponse(data);
       cb(formattedData);
     });
@@ -68,7 +95,7 @@
   }
 
   function setHorsey(formattedData) {
-    config.horse = horsey(document.querySelector(config.element), {
+    config.horse = horsey($element[0], {
       suggestions: formattedData,
       anchor: '@'
     });

@@ -2,10 +2,20 @@
 
 var Post = require('./Post');
 
+// res.format will respond according to the Accept part of the request header.
+// see http://expressjs.com/api.html#res.format
+// can also include v3, v2, etc. (version number) in the header.
 module.exports.index = function (req, res) {
   Post.findAll(function (err, posts) {
     if (err) { throw err; }
-    res.render('post/index', {posts: posts});
+    res.format({
+      html: function () {
+        res.render('post/index', {posts: posts});
+      },
+      json: function () {
+        res.send({posts: posts});
+      }
+    });
   });
 };
 

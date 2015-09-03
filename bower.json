@@ -1,10 +1,10 @@
 {
   "name": "minitwit",
   "main": "index.js",
-  "version": "0.0.0",
-  "homepage": "https://github.com/johnwquarles/minitwit",
+  "version": "1.0.0",
+  "homepage": "https://github.com/NSS-Cohort-9/minitwit#readme",
   "authors": [
-    "johnwquarles <john.w.quarles@gmail.com>"
+    "Scott Humphries <scott@sscotth.io> (http://sscotth.io)"
   ],
   "license": "MIT",
   "ignore": [
@@ -17,6 +17,7 @@
   ],
   "dependencies": {
     "jquery": "~2.1.4",
-    "horsey": "~2.6.1"
+    "horsey": "~2.6.1",
+    "angular": "~1.4.5"
   }
 }

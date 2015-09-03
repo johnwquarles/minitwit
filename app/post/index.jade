@@ -5,7 +5,11 @@ block content
     input.entry(name='text')
     input(type='submit')
 
-  ul
-    each post in posts
-      li
-        a(href='/post/' + post._id)= post.text
+
+  div(ng-controller="PostsCtrl as post")
+    ul
+      li(ng-repeat="p in post.data")
+        a(href="/post/{{p._id}}") {{p.text}}
+      //each post in posts
+      //  li
+      //    a(href='/post/' + post._id)= post.text
